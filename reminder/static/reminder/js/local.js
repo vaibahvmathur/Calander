@@ -274,6 +274,7 @@ function plot_Calander(cur_month)
     var event_data = get_event_data(cur_month[0])[0];
     var today_event_list = get_event_data(cur_month[0])[1];
     // Loop through current months dates
+    var leftside = $('.today-date-event-container').find('.today-date-event-container-data').remove();
     $.each(today_event_list, function(index, today_value){
         var event_today_id = 'today_event_id_'+ today_value['pk'];
         var event_today_name = today_value['fields']['name'];

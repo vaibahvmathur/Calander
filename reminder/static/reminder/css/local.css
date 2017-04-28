@@ -1,9 +1,3 @@
-/*.popup-name-display*/
-/*{*/
-    /*color: #777777 !important;*/
-    /*font-weight: bolder !important;*/
-/*}*/
-
 
 .today-date-event-container
 {
@@ -58,7 +52,8 @@
 
 #clock{
     color: white;
-    font-size: -webkit-xxx-large;
+    /*font-size: -webkit-xxx-large;*/
+    font-size: xx-large;
     margin-left: 10px;
 }
 
