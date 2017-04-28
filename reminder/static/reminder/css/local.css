@@ -1,4 +1,3 @@
-
 .today-date-event-container
 {
     height: 130px;
@@ -148,6 +147,7 @@
 #myPop, .this-popup-display{
     width: 300px !important;
     color: #b3b3b3 !important;
+    z-index: 1;
 }
 
 
@@ -382,11 +382,6 @@ header {
     font-size: 20px;
 }
 
-/* ============================
-				Mobile Responsiveness
-   ============================*/
-
-
 @media(max-width: 768px) {
 
 	#calendar .weekdays, #calendar .other-month {
@@ -405,16 +400,6 @@ header {
 		float: none;
 	}
 }
-
-
-
-
-
-
-
-
-
-
 
 
 .modal {
