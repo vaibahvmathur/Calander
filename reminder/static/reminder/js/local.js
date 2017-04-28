@@ -131,6 +131,24 @@ $(document).ready(function(){
             success: function (data) {
                 if(data['success'])
                 {
+                    var today = new Date();
+                    var dd = today.getDate();
+                    var mm = today.getMonth()+1; //January is 0!
+
+                    var yyyy = today.getFullYear();
+                    if(dd<10){
+                    dd='0'+dd;
+                    }
+                    if(mm<10){
+                    mm='0'+mm;
+                    }
+                    var today1 = dd+'-'+mm+'-'+yyyy;
+                    if (date == today1)
+                    {
+                        var event_today_id = 'today_event_id_'+ data['new_id'];
+                        var this_to_append = '<div class="today-date-event-container-data" id='+event_today_id+'><span class="event-container-data-name">'+name+'</span><span class="event-container-data-location">'+location+'</span></div>';
+                        $('.today-date-event-container').append(this_to_append);
+                    }
                     addEvent(name, location, desc, date, data['new_id']);
                     $("#myPop").attr("data-event-id", parseInt(0));
                     $("#myPop").popup("close");

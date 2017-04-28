@@ -34,8 +34,9 @@ def save_event(request):
         newEvent.date = date
         # Save New Event
         newEvent.save()
-        success = True
         new_id = newEvent.id
+        success = True
+
     except:
         success = False
         new_id = 0
