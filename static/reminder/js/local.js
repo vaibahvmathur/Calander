@@ -21,6 +21,14 @@ $(document).ready(function(){
             success: function (data) {
                 if(data['success'])
                 {
+                    var leftside = $('.today-date-event-container').find('.today-date-event-container-data');
+                    $.each(leftside, function(index, value){
+                        if (('today_event_id_'+event_id1) == ($(this).attr('id')))
+                        {
+                            $(this).find('.event-container-data-name').html(name1);
+                            $(this).find('.event-container-data-location').html(location1);
+                        }
+                    });
                     // Edit Event details in Calander and View detail popup and close edit event popup
                     $('#name_'+event_name).html(name1);
                     $('#'+event_name).find('.popup-name-display').html(name1);
@@ -123,6 +131,24 @@ $(document).ready(function(){
             success: function (data) {
                 if(data['success'])
                 {
+                    var today = new Date();
+                    var dd = today.getDate();
+                    var mm = today.getMonth()+1; //January is 0!
+
+                    var yyyy = today.getFullYear();
+                    if(dd<10){
+                    dd='0'+dd;
+                    }
+                    if(mm<10){
+                    mm='0'+mm;
+                    }
+                    var today1 = dd+'-'+mm+'-'+yyyy;
+                    if (date == today1)
+                    {
+                        var event_today_id = 'today_event_id_'+ data['new_id'];
+                        var this_to_append = '<div class="today-date-event-container-data" id='+event_today_id+'><span class="event-container-data-name">'+name+'</span><span class="event-container-data-location">'+location+'</span></div>';
+                        $('.today-date-event-container').append(this_to_append);
+                    }
                     addEvent(name, location, desc, date, data['new_id']);
                     $("#myPop").attr("data-event-id", parseInt(0));
                     $("#myPop").popup("close");
@@ -205,19 +231,25 @@ function openPopup()
     var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     $('#calendar .days li:not(.other-month)').unbind('click');
     $('#calendar .days li:not(.other-month)').click(function(){
-        clearpopup();
-        var this_id =$(this).find("div").attr("id");
-        var this_day =$(this).find("div").attr("data-day");
-        var this_date =$(this).find("div").attr("data-date");
-        var this_month =$(this).find("div").attr("data-month");
-        var this_year =$(this).find("div").attr("data-year");
-        var temp = weekday[this_day]+', '+ this_date + ' ' + months[this_month] + ' ' + this_year;
-        $("#popup-date").html(temp);
+        total_length = $(this).find('.event .event-desc').length
+        if(total_length < 3) {
+            clearpopup();
+            var this_id = $(this).find("div").attr("id");
+            var this_day = $(this).find("div").attr("data-day");
+            var this_date = $(this).find("div").attr("data-date");
+            var this_month = $(this).find("div").attr("data-month");
+            var this_year = $(this).find("div").attr("data-year");
+            var temp = weekday[this_day] + ', ' + this_date + ' ' + months[this_month] + ' ' + this_year;
+            $("#popup-date").html(temp);
 
-        $("#myPop").popup("open");
-        $("#myPop").attr("data-date", this_id);
-        $("#myPop").attr("data-event-id", '0');
-
+            $("#myPop").popup("open");
+            $("#myPop").attr("data-date", this_id);
+            $("#myPop").attr("data-event-id", '0');
+        }
+        else
+        {
+            alert('only 3 event allowed');
+        }
 
     });
 }
@@ -239,8 +271,17 @@ function plot_Calander(cur_month)
     var this_date = '';
     var this_week_date = '';
     // Get all events for this month
-    var event_data = get_event_data(cur_month[0]);
+    var event_data = get_event_data(cur_month[0])[0];
+    var today_event_list = get_event_data(cur_month[0])[1];
     // Loop through current months dates
+    var leftside = $('.today-date-event-container').find('.today-date-event-container-data').remove();
+    $.each(today_event_list, function(index, today_value){
+        var event_today_id = 'today_event_id_'+ today_value['pk'];
+        var event_today_name = today_value['fields']['name'];
+        var event_today_location = today_value['fields']['location'];
+        var this_to_append = '<div class="today-date-event-container-data" id='+event_today_id+'><span class="event-container-data-name">'+event_today_name+'</span><span class="event-container-data-location">'+event_today_location+'</span></div>'
+        $('.today-date-event-container').append(this_to_append);
+    });
     $.each(cur_month, function(index, value){
         if (index == 0)
         {
@@ -421,6 +462,7 @@ function get_event_data(temp_date)
     var curr_year = temp_date.getFullYear();
     var date = (curr_date + "-" + (parseInt(curr_month)+1) + "-" + curr_year);
     var data_list = {};
+    var today_event_lists = [];
     // Call to backend
     $.ajax({
         type: 'GET',
@@ -430,13 +472,15 @@ function get_event_data(temp_date)
         async: false,
         success: function (data) {
             //Get events list for this month
-            data_list = data['dates_list'];
+            today_event_lists.push(data_list = data['dates_list'])
+            today_event_lists.push(data_list = data['today_event_lists'])
+
         },
         error: function (request, error) {
             console.log("error");
         }
     });
-    return data_list
+    return today_event_lists
 }
 
 
@@ -457,6 +501,7 @@ function calanderEventDetails() {
 
     $('#calendar .days li:not(.other-month) .event .event-desc').unbind('click');
     $('#calendar .days li:not(.other-month) .event .event-desc').click(function (event) {
+        event.stopPropagation();
         var event_id = $(this).attr("data-event");
         var pop_id = 'pop' + event_id;
         $('#' + pop_id).popup();
@@ -535,6 +580,13 @@ function eventDelete()
             success: function (data) {
                 if(data['success'])
                 {
+                    var leftside = $('.today-date-event-container').find('.today-date-event-container-data');
+                    $.each(leftside, function(index, value){
+                        if (('today_event_id_'+delete_this_id) == ($(this).attr('id')))
+                        {
+                            $(this).remove()
+                        }
+                    });
                     // Remove Event from calander and close view detail popup
                     var remove_event_desc_from_calander = parent_id.slice(3,parent_id.length);
                     var remove_event_from_calander = remove_event_desc_from_calander.slice(-10);
@@ -548,6 +600,7 @@ function eventDelete()
                     else {
                         $('#' + remove_event_desc_from_calander).remove();
                     }
+                    alert('Event Deleted');
                 }
             },
             error: function (request, error) {
@@ -582,9 +635,14 @@ function calanderhover()
 {
     //After Plot Calander
     $("#calendar .days li:not(.other-month)").unbind('hover');
-    $("#calendar .days li:not(.other-month)").hover(function () {
-        $(this).find(".event .event-desc").toggleClass("event-desc-hover");
-        $(this).find("div").toggleClass("date-hover");
+    $("#calendar .days li:not(.other-month)").mouseenter(function () {
+        $(this).find(".event .event-desc").addClass("event-desc-hover");
+        //$(this).find("div").addClass("date-hover");
+
+    }).mouseleave(function(){
+        $(this).find(".event .event-desc").removeClass("event-desc-hover");
+        $(this).find(".event .event-desc").children().removeClass("event-desc-hover");
+        //$(this).find("div").removeClass("date-hover");
 
     });
 }

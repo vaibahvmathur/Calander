@@ -1,3 +1,49 @@
+.today-date-event-container
+{
+    height: 130px;
+    background-color: #2bc493;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.today-date-event-container-data
+{
+    color: white;
+    height: 40px;
+}
+
+
+.event-container-data-name
+{
+    margin-left: 15px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    position: fixed;
+    width: 10%;
+}
+
+
+.event-container-data-location
+{
+    margin-left: 15px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    position: fixed;
+    width: 10%;
+    margin-left: 12%;
+}
+
+
+.today-date-style
+{
+    font-size: medium;
+    color: white;
+    padding-left: 20px;
+}
+
+
 .event-decorate{
     text-align: center;
 }
@@ -5,8 +51,9 @@
 
 #clock{
     color: white;
-    font-size: -webkit-xxx-large;
-    margin-left: 10px;
+    /*font-size: -webkit-xxx-large;*/
+    font-size: xx-large;
+    margin-left: 30px;
 }
 
 
@@ -100,6 +147,7 @@
 #myPop, .this-popup-display{
     width: 300px !important;
     color: #b3b3b3 !important;
+    z-index: 1;
 }
 
 
@@ -247,10 +295,10 @@ header {
 	font-size: 12px;
 }
 
-/*#calendar ul.weekdays li:hover{*/
-	/*border-bottom: 3px solid green;*/
-	/*background-color: #e5e6e7;*/
-/*}*/
+#calendar ul.weekdays li:hover{
+	border-bottom: 3px solid green;
+	background-color: #e5e6e7;
+}
 
 #calendar .days li {
 	height: 120px;
@@ -334,11 +382,6 @@ header {
     font-size: 20px;
 }
 
-/* ============================
-				Mobile Responsiveness
-   ============================*/
-
-
 @media(max-width: 768px) {
 
 	#calendar .weekdays, #calendar .other-month {
@@ -357,16 +400,6 @@ header {
 		float: none;
 	}
 }
-
-
-
-
-
-
-
-
-
-
 
 
 .modal {
