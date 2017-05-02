@@ -77,6 +77,7 @@ WSGI_APPLICATION = 'calander.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',  # django.db.backends.mysql  or  mysql.connector.django
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'NAME': 'events',
